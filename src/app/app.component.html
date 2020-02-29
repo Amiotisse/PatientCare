@@ -1,0 +1,179 @@
+<mat-tab-group>
+  <mat-tab label="Recherche Patient">
+    <mat-card class = "mat-card">
+      <mat-card-header>
+        <mat-card-title>Recherche et Affichage des Patients</mat-card-title>
+        <mat-card-subtitle>Using GET methode</mat-card-subtitle>
+      </mat-card-header>
+      <div class="container">
+        <mat-form-field >
+          <input matInput placeholder="Recherche" [(ngModel)]="search"/>
+          <mat-hint>Taper le nom de famille  </mat-hint>
+        </mat-form-field>
+      </div>
+      <div class="container">
+        <mat-card-title> Affichage des dix premier patients</mat-card-title>
+        <table mat-table [dataSource]="entry" matSort class="mat-elevation-z8">
+
+          <!--- Note that these columns can be defined in any order.
+                The actual rendered columns are set as a property on the row definition" -->
+
+          <!-- Position Column -->
+          <ng-container matColumnDef="id">
+            <th mat-header-cell *matHeaderCellDef> identifiants </th>
+            <td mat-cell *matCellDef="let element"> {{element['resource']['id']}} </td>
+          </ng-container>
+
+          <!-- Name Column -->
+          <ng-container matColumnDef="lastname" >
+            <th mat-header-cell *matHeaderCellDef> Nom </th>
+            <td mat-cell *matCellDef="let element"> {{getFamilyName(element)}} </td>
+          </ng-container>
+
+
+          <!-- Weight Column -->
+          <ng-container matColumnDef="name">
+            <th mat-header-cell *matHeaderCellDef> Prénom </th>
+            <td mat-cell *matCellDef="let element"> {{getFirstName(element)}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="delete">
+            <th mat-header-cell *matHeaderCellDef> Supprimer </th>
+            <td mat-cell *matCellDef="let element">
+              <button mat-mini-fab color="primary" (click)="deletePatient(element)" >
+                <mat-icon>delete</mat-icon>
+              </button>
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayeColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayeColumns;"></tr>
+
+        </table>
+
+      </div>
+    </mat-card>
+  </mat-tab>
+  <mat-tab label="Ajout Patient">
+
+    <mat-card class = "mat-card">
+    <mat-card-header>
+      <mat-card-title>Ajout de Patients</mat-card-title>
+      <mat-card-subtitle>Using Post methode</mat-card-subtitle>
+    </mat-card-header>
+      <form (ngSubmit)="onCreatePoste(f)" #f="ngForm" >
+        <div>
+          <div class="container">
+            <mat-form-field class="full-width" [floatLabel]="'auto'">
+              <mat-label>Prénom</mat-label>
+              <input
+                name ="firstName"
+                ngModel
+                matInput
+                placeholder=""
+                required>
+            </mat-form-field>
+            <mat-form-field class="full-width">
+              <mat-label>Nom</mat-label>
+              <input
+                name ="lastName"
+                ngModel
+                matInput
+                placeholder=""
+                required>
+            </mat-form-field>
+            <mat-form-field class="full-width">
+              <mat-label>Date de naissance </mat-label>
+              <input type=text
+                     name="birthDate"
+                     ngModel
+                     matInput
+                     placeholder="jj-mm-aaaa"
+                     required>
+            </mat-form-field>
+            <mat-form-field appearance="legacy">
+              <mat-label>Sexe</mat-label>
+              <mat-select
+                name ="gender"
+                ngModel
+                required>
+                <mat-option value="female" >Femme</mat-option>
+                <mat-option value="male">Homme</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+          <div align="end">
+            <button type="submit" mat-raised-button color="primary" > Ajouter</button>
+          </div>
+        </div>
+      </form>
+
+
+    </mat-card >
+
+
+  </mat-tab>
+  <mat-tab label="Modification Patient ">
+    <mat-card class = "mat-card">
+      <mat-card-header>
+        <mat-card-title>Modification Patients</mat-card-title>
+        <mat-card-subtitle>Using Put methode</mat-card-subtitle>
+      </mat-card-header>
+      <div class="container">
+        <mat-form-field >
+          <input matInput placeholder="Recherche" [(ngModel)]="search"/>
+          <mat-hint>Taper le nom de famille  </mat-hint>
+        </mat-form-field>
+      </div>
+      <mat-card-footer>
+        <mat-accordion>
+          <mat-expansion-panel *ngFor="let element of entry"
+                               (opened)="panelOpenState = true"
+                               (closed)="panelOpenState = false">
+            <mat-expansion-panel-header>
+              <mat-panel-title>
+                {{getFirstName(element)}} {{getFamilyName(element)}}
+              </mat-panel-title>
+              <mat-panel-description>
+                Plus de détails
+              </mat-panel-description>
+            </mat-expansion-panel-header>
+            <form (ngSubmit)="onEditPost(g, element)" #g="ngForm">
+              <div>
+                <div class="container">
+                  <mat-form-field class="full-width">
+                    <mat-label>Prénom</mat-label>
+                    <input
+                      name ="firstName"
+                      ngModel
+                      matInput
+                      placeholder="{{getFirstName(element)}}">
+                  </mat-form-field>
+                  <mat-form-field class="full-width">
+                    <mat-label>Nom</mat-label>
+                    <input
+                      name ="lastName"
+                      ngModel
+                      matInput
+                      placeholder="{{getFamilyName(element)}}">
+                  </mat-form-field>
+                </div>
+                <div align="end">
+                  <button type="submit" mat-raised-button color="primary"> Modifier</button>
+                </div>
+              </div>
+            </form>
+
+          </mat-expansion-panel>
+        </mat-accordion>
+      </mat-card-footer>
+    </mat-card>
+
+  </mat-tab>
+</mat-tab-group>
+
+
+
+
+
+
